@@ -1,2 +1,2 @@
 # GeekLabelXXX
-The GeekLabel XXX
+Please check ReadMe.docx
