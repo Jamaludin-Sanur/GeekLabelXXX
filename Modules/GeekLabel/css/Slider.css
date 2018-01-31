@@ -1,0 +1,112 @@
+/* -------------------
+ Slider style
+ --------------------*/
+ .slider{
+	 position:relative;
+	 padding:1rem 0rem;
+ }
+ 
+ .slider__frame{
+	overflow:hidden;
+	margin:0rem 2.5rem;
+}
+ 
+.slider__viewport{
+	white-space:nowrap;
+	padding:0rem 0rem;
+	list-style-type: none;
+	margin:0px;
+}
+
+.slider__item--horizontal{
+	list-style-type: none;
+	vertical-align: top;
+	display:inline-block;
+	white-space: initial;
+	padding:0rem 1.5rem;
+	overflow:hidden;
+	text-align:center;
+}
+
+.slider__item--vertical{
+	width:100%;
+	list-style-type: none;
+	vertical-align: top;
+	display:block;
+	white-space: initial;	
+}
+
+.slider__button--horizontal{
+	height:2rem;
+	width:auto;
+	top:50%;
+	margin-top:-2rem;
+	position:absolute;
+	cursor:pointer;
+}
+
+.slider__button--vertical{
+	width:2rem;
+	height:auto;
+	position:initial;
+	display:block;
+	margin: 0px auto;
+	cursor:pointer;
+}
+
+.slider__page_btn{
+	
+	background: url("../images/page_btn") no-repeat center center;
+	width:.7rem;
+	height:.7rem;
+	background-size:cover;
+	cursor:pointer;
+	border:none;
+	text-align:center;
+	margin:1rem 0.3rem;
+	outline:none;
+}
+
+.slider__page_btn--selected{
+	background:url("../images/page_btn_selected") no-repeat center center;
+	width:1rem;
+	height:1rem;
+	background-size:cover;
+	cursor:pointer;
+	border:none;
+	text-align:center;
+	margin:1rem 0.3rem;
+	outline:none;
+}
+
+.slider__page_btn--selected:focus{
+	border:none;
+	outline:none;
+}
+
+.left{
+	left:0px;
+}
+
+.right{
+	right:0px;
+}
+
+.center{
+	margin-left:auto;
+	margin-right:auto;
+	text-align:center;
+}
+
+.slide-button{
+	border:none;
+	background: url( "../images/slide-btn.png" ) center /cover;
+	height: 3rem;
+	width: 3rem;	
+	margin-top:2rem;
+	outline:none;
+}
+
+.slide-button:focus{
+	outline:none;
+}

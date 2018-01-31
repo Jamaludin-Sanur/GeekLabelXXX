@@ -1,0 +1,6 @@
+name = GeekLabel
+description = Module to create a Slider
+core = 7.x
+stylesheets[all][] = css/Slider.css
+scripts[] = js/main.js
+scripts[] = js/Slider.js

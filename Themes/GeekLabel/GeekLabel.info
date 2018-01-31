@@ -1,0 +1,13 @@
+name = Geek Label
+description = Geek Label Theme
+core = 7.x
+
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/bootstrap.min.css
+
+scripts[all] = js/script.js
+
+regions[header] = Header
+regions[highlighted] = Highlighted
+regions[content] = Content
+regions[footer] = Footer

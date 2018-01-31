@@ -1,0 +1,146 @@
+<?php
+const BLOCK_CONTAINER_SIZE = 3;
+const NODE_COLOR = array(
+	"DEFAULT" => "#f1f2f2",
+	0 => "#d83454",
+	4 => "#ffffff",
+);
+
+// Define blocks which displayed in block administration page
+function GeekLabel_block_info() {
+  
+	// Generate block container
+	for($i=0;$i<BLOCK_CONTAINER_SIZE;$i++){
+	  $blocks['GL_'.($i+1)] = array(
+		'info' => t('Geek Label - Container #'.($i+1)),
+		'cache' => DRUPAL_NO_CACHE,
+	  );  	  
+  }  
+  return $blocks;
+}
+
+// Display form in block configuration
+function GeekLabel_block_configure($delta = '') {
+
+	$form = array();
+
+	// check if block name contain prefix 'GL_'
+	if( strcmp(substr($delta, 0, 3),"GL_") == 0){
+		
+		// Display tags dropdown form if tags exist
+		$voc = taxonomy_vocabulary_machine_name_load('TAGS');
+		$tree = taxonomy_get_tree($voc->vid);
+		if(count($tree) < 1){
+			//no tags
+			$form[$delta."-tags_not_found"] = array(
+				'#title' => t('Select tag to display'),
+				'#type' => 'textfield',
+				'#attributes' => array(
+					'readonly' => 'readonly',
+				),
+				'#default_value' => t('No tags found! '),
+			);
+		}
+		else{
+			//tags exist
+			$options = array(' ' => '-none-');		
+			foreach($tree as $key => $value){
+				$options[$value->tid] = $value->name;
+			}
+			$form[$delta."-tag"] = array(
+			  '#title' => t('Select tag to display'),
+			  '#type' => 'select',
+			  '#default_value' => variable_get($delta."-tag", ' '),
+			  '#options' => $options,
+			);				
+		}	
+	}
+
+    return $form;
+}
+
+// Save block configuration form value
+function GeekLabel_block_save($delta = '', $edit = array()) {
+
+	// check if block name contain prefix 'GL_'
+	if(strcmp(substr($delta, 0, 3),"GL_") == 0){
+		// Save tag
+		if(isset($edit[$delta."-tag"])){
+			variable_set($delta."-tag", $edit[$delta."-tag"]);	
+		}
+	}
+}
+
+// Display block
+function GeekLabel_block_view($delta = '')
+{
+	$block = array();
+	// Display block GeekLabel
+	if(strcmp(substr($delta, 0, 3),"GL_") == 0){
+		
+		$tid = variable_get($delta."-tag", '');
+		if(!empty($tid)){		
+			
+			$prev_id = NULL;
+			
+			// display article content inside the DOM
+			$nid_array = taxonomy_select_nodes($tid, FALSE);
+			for($i=count($nid_array)-1; $i>=0; $i--){
+				
+				// node id
+				$nid = $nid_array[$i];
+				
+				// get article background-color
+				$bgColor = (array_key_exists( $i, NODE_COLOR)) ? NODE_COLOR[$i] : NODE_COLOR["DEFAULT"];	
+				
+				// article wrapper
+				$wrapper_id = "article_{$i}";
+				$wrapper_class = "d-flex flex-column align-items-center justify-content-center full_height";
+				$wrapper_style = "background-color:{$bgColor}";
+				$output = "<article id='{$wrapper_id}' class='$wrapper_class' style='{$wrapper_style}'>";
+				
+				// display article image
+				$nodeView = node_view(node_load($nid));
+				$nodeView['field_image'][0]['#item']['attributes'] = array("class" => "img-fluid");
+				$output .= render( $nodeView["field_image"] );
+				
+				//Display article title if not empty and not contain prefix '#'
+				$nodeTitle = $nodeView['#node']->title;
+				if( isset($nodeTitle) && trim($nodeTitle)!=='' )
+				{
+					 if(strcmp(substr($nodeTitle, 0, 1),"#") != 0){
+						$output .= "<h2 class=article__title>{$nodeTitle}</h2>";
+					 }			 
+				}		
+				// display article body
+				$nodeView['body']['#attributes'] = array("class" => "article__paragraph");
+				$output .= render( $nodeView["body"] );
+				
+				// display article next button
+				if(isset($prev_id)){
+					$button = "<button class='slide-button' onclick='GeekLabel.goToId(\"".$prev_id."\", 100, 30)'></button>";
+					$output .= $button;					
+				}
+
+				
+				// set prev article id
+				$prev_id = $wrapper_id;
+				
+				// close wrapper
+				$output .= "</article>";
+				
+				// put wrapper inside the DOM
+				$block['content'] = $output.$block['content'];
+			} // end of loop
+			
+/* 			// add javascript file for slider
+			$jsPath = drupal_get_path('module', 'J_Slider') . '/js/J_Slider.js';
+			drupal_add_js($jsPath);	 */		
+
+		}
+
+	}	
+    return $block;
+}
+
+?>
