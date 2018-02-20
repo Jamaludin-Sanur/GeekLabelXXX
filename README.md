@@ -1,2 +1,3 @@
 # GeekLabelXXX
-Please check ReadMe.docx
+
+http://35.189.121.240/
